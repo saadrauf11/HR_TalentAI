@@ -3,17 +3,17 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^24.3.3",
-    "prisma": "^6.16.1"
+    "@types/node": "^24.3.3"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.1",
     "bcryptjs": "^3.0.2",
     "bullmq": "^5.58.5",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "sequelize": "^6.32.1",
+    "sequelize-cli": "^6.6.0"
   }
 }

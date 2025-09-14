@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Match } from '../models'; // Sequelize model
 
 const router = Router();
-const prisma = new PrismaClient();
 
 router.get('/', async (req, res) => {
-  const matches = await prisma.match.findMany();
+  const matches = await Match.findAll();
   res.json(matches);
 });
 

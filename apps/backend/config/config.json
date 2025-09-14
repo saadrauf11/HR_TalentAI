@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Postgresql*11",
+    "database": "db_HR_TalentAI",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
