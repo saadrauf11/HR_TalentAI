@@ -4,16 +4,19 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string) => void;
   logout: () => void;
+  tenantId: string; // Added tenantId to the context type
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [tenantId, setTenantId] = useState<string>('demo-tenant-id'); // Added tenantId state
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
+    setTenantId('demo-tenant-id'); // Replace with actual logic to fetch tenantId
   }, []);
 
   const login = (token: string) => {
@@ -27,7 +30,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, tenantId }}>
       {children}
     </AuthContext.Provider>
   );

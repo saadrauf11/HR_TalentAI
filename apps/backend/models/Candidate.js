@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
     },
     tenantId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true, // Made tenantId optional
     },
     name: {
       type: DataTypes.STRING,
@@ -26,6 +26,10 @@ module.exports = (sequelize) => {
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    cvPath: {
+      type: DataTypes.STRING,
+      allowNull: true, // CV is optional
     },
   });
 

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Typography, Paper, Button, Stack, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -13,6 +12,7 @@ interface Job {
   title: string;
   description: string;
   createdById: string;
+  companyId: string; // Added companyId property
 }
 
 
@@ -72,8 +72,8 @@ const Jobs: React.FC = () => {
     const tenantId = 'd76f0344-26f2-46d8-9630-b8fb35352c27'; // DemoCorp
     const createdById = '8b7717df-e40d-43a5-8277-2d773b878446'; // admin@democorp.local
     const payload = editJob
-      ? { ...values, tenantId: editJob.tenantId, createdById: editJob.createdById }
-      : { ...values, tenantId, createdById };
+      ? { ...values, tenantId: editJob.tenantId, createdById: editJob.createdById, companyId: editJob.companyId }
+      : { ...values, tenantId, createdById, companyId: 'default-company-id' }; // Add default companyId
     fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },

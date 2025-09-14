@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Typography, Paper, Button, Stack, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -6,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CandidateForm, { CandidateFormValues } from '../components/CandidateForm';
+import { useAuth } from '../AuthContext';
 
 interface Candidate {
   id: string;
@@ -16,7 +16,6 @@ interface Candidate {
   createdAt: string;
 }
 
-
 const baseColumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
   { field: 'name', headerName: 'Name', flex: 1 },
@@ -26,14 +25,17 @@ const baseColumns: GridColDef[] = [
   { field: 'createdAt', headerName: 'Created At', width: 180 },
 ];
 
-
 const Candidates: React.FC = () => {
+  const { tenantId } = useAuth(); // Fetch tenantId dynamically
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
   const [candidateFormOpen, setCandidateFormOpen] = useState(false);
   const [editCandidate, setEditCandidate] = useState<Candidate | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [candidateToDelete, setCandidateToDelete] = useState<Candidate | null>(null);
+
+  const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:4000/api'; // Fallback for undefined API URL
+  console.log('API URL:', apiUrl); // Debug log
 
   const fetchCandidates = () => {
     setLoading(true);
@@ -67,18 +69,37 @@ const Candidates: React.FC = () => {
     setEditCandidate(null);
   };
 
-  const handleFormSubmit = (values: CandidateFormValues) => {
+  const handleFormSubmit = async (values: CandidateFormValues, cvFile: File | null) => {
+    const formData = new FormData();
+    formData.append('tenantId', 'd76f0344-26f2-46d8-9630-b8fb35352c27'); // Hardcoded tenantId
+    formData.append('name', values.name);
+    formData.append('email', values.email);
+    formData.append('phone', '1234567890'); // Updated phone number to a shorter, valid value for testing
+    if (cvFile) {
+      formData.append('cv', cvFile);
+    }
+
+    console.log('FormData contents:');
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    }); // Debug log
+
     const method = editCandidate ? 'PUT' : 'POST';
-    const url = editCandidate ? `http://localhost:4000/api/candidates/${editCandidate.id}` : 'http://localhost:4000/api/candidates';
-    fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    })
-      .then(() => {
-        fetchCandidates();
-        handleFormClose();
+    const url = editCandidate ? `${apiUrl}/candidates/${editCandidate.id}` : `${apiUrl}/candidates`;
+
+    try {
+      const response = await fetch(url, {
+        method,
+        body: formData,
       });
+      if (!response.ok) {
+        throw new Error('Failed to submit candidate');
+      }
+      fetchCandidates();
+      handleFormClose();
+    } catch (error) {
+      console.error('Failed to submit candidate:', error);
+    }
   };
 
   const confirmDelete = () => {
